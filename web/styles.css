@@ -30,8 +30,8 @@ img {
 }
 
 .site-header {
-  border-top: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
   background: #ffffff;
 }
 
@@ -51,24 +51,22 @@ img {
   display: flex;
   justify-content: center;
   gap: 0;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--ink);
 }
 
 .site-nav a {
   min-width: 132px;
   padding: 18px 24px;
-  border-left: 2px solid var(--ink);
-  font-weight: 800;
+  border-left: 0px solid var(--ink);
+  font-weight: 400;
   text-align: center;
 }
 
-.site-nav a:last-child {
-  border-right: 2px solid var(--ink);
-}
+
 
 .site-nav a:hover,
 .site-nav a[aria-current="page"] {
-  background: var(--accent);
+  border-bottom: 3px solid var(--ink);
 }
 
 .archive-shell {
