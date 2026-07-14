@@ -1,0 +1,245 @@
+:root {
+  --ink: #111111;
+  --paper: #fbfaf6;
+  --muted: #66625c;
+  --line: #111111;
+  --accent: #f4d35e;
+  --accent-2: #4ea5d9;
+  --soft: #f2efe6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.site-header {
+  border-top: 8px solid var(--ink);
+  border-bottom: 4px solid var(--ink);
+  background: #ffffff;
+}
+
+.site-title {
+  display: block;
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 34px 20px 30px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.25rem, 6vw, 4.35rem);
+  font-weight: 800;
+  line-height: 0.95;
+  text-align: center;
+}
+
+.site-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  border-top: 4px solid var(--ink);
+}
+
+.site-nav a {
+  min-width: 132px;
+  padding: 18px 24px;
+  border-left: 3px solid var(--ink);
+  font-weight: 800;
+  text-align: center;
+}
+
+.site-nav a:last-child {
+  border-right: 3px solid var(--ink);
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  background: var(--accent);
+}
+
+.archive-shell {
+  width: min(100% - 32px, 980px);
+  margin: 42px auto 80px;
+}
+
+.archive-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 5px solid var(--ink);
+}
+
+.eyebrow,
+.post-meta {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.archive-heading h1,
+.article-hero h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.04;
+}
+
+.archive-heading h1 {
+  font-size: clamp(2rem, 6vw, 4rem);
+}
+
+.post-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 34px;
+  align-items: center;
+  padding: 34px 0;
+  border-bottom: 3px solid var(--ink);
+}
+
+.featured-post {
+  border-top: 3px solid var(--ink);
+}
+
+.post-copy {
+  display: block;
+}
+
+.post-copy h2 {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 4vw, 2.65rem);
+  line-height: 1.08;
+}
+
+.post-copy p:last-child {
+  margin: 0;
+  color: #34312d;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.34;
+}
+
+.post-image-link {
+  display: block;
+  border: 4px solid var(--ink);
+  background: var(--accent-2);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.post-image-link img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.article-shell {
+  width: min(100% - 32px, 760px);
+  margin: 50px auto 90px;
+}
+
+.article-hero {
+  text-align: center;
+}
+
+.article-hero h1 {
+  font-size: clamp(2.55rem, 8vw, 5rem);
+  letter-spacing: 0;
+}
+
+.compact-hero h1 {
+  font-size: clamp(2.25rem, 6vw, 4rem);
+}
+
+.dek {
+  width: min(100%, 620px);
+  margin: 18px auto 0;
+  color: #38342f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
+  line-height: 1.35;
+}
+
+.article-photo {
+  margin: 34px 0 0;
+  border: 5px solid var(--ink);
+  background: var(--accent-2);
+  box-shadow: 10px 10px 0 var(--ink);
+}
+
+.article-photo img {
+  width: 100%;
+  aspect-ratio: 16 / 8;
+  object-fit: cover;
+}
+
+.article-rule {
+  height: 12px;
+  margin: 44px 0 36px;
+  border-top: 4px solid var(--ink);
+  border-bottom: 4px solid var(--ink);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0,
+    var(--ink) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+.article-body {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.18rem, 2.3vw, 1.38rem);
+  line-height: 1.68;
+}
+
+.article-body p {
+  margin: 0 0 1.35em;
+}
+
+@media (max-width: 720px) {
+  .site-title {
+    padding-block: 26px 24px;
+  }
+
+  .site-nav a {
+    min-width: 50%;
+    padding-inline: 16px;
+  }
+
+  .archive-shell,
+  .article-shell {
+    width: min(100% - 24px, 760px);
+  }
+
+  .post-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .post-image-link {
+    grid-row: 1;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .article-photo {
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+}
