@@ -54,6 +54,7 @@ img {
   border-top: 1px solid var(--accent);
 }
 
+/* Nav link highlight text width only */
 .site-nav a {
   --nav-pad: 10px;
   position: relative;
@@ -87,7 +88,7 @@ img {
   box-sizing: border-box;
   width: 100%;
   max-width: 680px;
-  margin: 42px auto 80px;
+  margin: 20px auto 80px;
   padding-inline: 16px;
 }
 
@@ -206,12 +207,3 @@ img {
     gap: 20px;
   }
 
-  .post-image-link {
-    grid-row: 1;
-    box-shadow: 6px 6px 0 var(--ink);
-  }
-
-  .article-photo {
-    box-shadow: 6px 6px 0 var(--ink);
-  }
-}
