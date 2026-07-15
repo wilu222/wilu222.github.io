@@ -54,7 +54,10 @@ img {
   border-top: 1px solid var(--accent);
 }
 
-/* Nav link highlight text width only */
+/* Nav link highlight text width only. 
+Use span after pseudo element to create a 3px underline that spans the width of the text.
+Push the underline down by the padding of the link.
+*/
 .site-nav a {
   --nav-pad: 10px;
   position: relative;
