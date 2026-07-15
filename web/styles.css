@@ -54,10 +54,6 @@ img {
   border-top: 1px solid var(--accent);
 }
 
-/* Nav link highlight text width only. 
-Use span after pseudo element to create a 3px underline that spans the width of the text.
-Push the underline down by the padding of the link.
-*/
 .site-nav a {
   --nav-pad: 10px;
   position: relative;
@@ -91,7 +87,7 @@ Push the underline down by the padding of the link.
   box-sizing: border-box;
   width: 100%;
   max-width: 680px;
-  margin: 20px auto 80px;
+  margin: 42px auto 80px;
   padding-inline: 16px;
 }
 
@@ -190,6 +186,7 @@ Push the underline down by the padding of the link.
   margin: 0 0 1.35em;
 }
 
+/* Mobile styles */
 @media (max-width: 720px) {
   .site-title {
     padding-block: 26px 24px;
@@ -200,13 +197,31 @@ Push the underline down by the padding of the link.
     padding-inline: 16px;
   }
 
-  .post-list,
+  .post-list {
+    margin-top: 0;
+    padding-inline: 0;
+  }
+
   .article-shell {
     padding-inline: 12px;
   }
 
   .post-row {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
+    padding: 28px 0;
   }
 
+  .post-image-link {
+    grid-row: 1;
+  }
+
+  .post-copy {
+    grid-row: 2;
+    padding-inline: 16px;
+  }
+
+  .post-image-link img {
+    aspect-ratio: 16 / 9;
+  }
+}
