@@ -55,17 +55,32 @@ img {
 }
 
 .site-nav a {
-  min-width: 100px;
-  padding: 10px 10px;
+  --nav-pad: 10px;
+  position: relative;
+  min-width: 70px;
+  padding: var(--nav-pad);
   font-weight: 400;
   text-align: center;
 }
 
+.site-nav a span {
+  display: inline-block;
+  position: relative;
+}
 
+.site-nav a span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  bottom: calc(-1 * var(--nav-pad));
+  background: transparent;
+}
 
-.site-nav a:hover,
-.site-nav a[aria-current="page"] {
-  border-bottom: 3px solid var(--ink);
+.site-nav a:hover span::after,
+.site-nav a[aria-current="page"] span::after {
+  background: var(--ink);
 }
 
 .post-list {
