@@ -7,7 +7,7 @@ This is a simple static prototype for a future GitHub Pages blog. It includes a 
 From this folder:
 
 ```bash
-cd web
+cd docs
 python3 -m http.server 8000
 ```
 
@@ -19,13 +19,19 @@ http://localhost:8000
 
 ## Files
 
-- `web/index.html` - homepage/archive layout
-- `web/article.html` - Medium/Substack-style article layout
-- `web/about.html` - filler about page
-- `web/styles.css` - shared neobrutalist editorial styling
-- `web/assets/article-header.svg` - placeholder article image
+- `docs/index.html` - homepage/archive layout
+- `docs/article.html` - Medium/Substack-style article layout
+- `docs/about.html` - filler about page
+- `docs/styles.css` - shared neobrutalist editorial styling
+- `docs/assets/article-header.svg` - placeholder article image
 
-For GitHub Pages, the simplest later path is to serve the `web/` folder contents from the repository root or configure Pages to publish from the chosen static directory.
+`misc/` holds private notes/drafts and is gitignored — it stays local only.
+
+## Publishing to GitHub Pages
+
+In the GitHub repo → **Settings → Pages → Build and deployment → Source**: "Deploy from a branch" → Branch `main`, folder `/docs` → **Save**.
+
+GitHub Pages only serves from the repo root or a `/docs` folder on a branch (no arbitrary folder without a custom Actions workflow), which is why the site lives in `docs/` here. Once saved, the site publishes at `https://wilu222.github.io/` within a couple of minutes.
 
 ## Publishing options
 
