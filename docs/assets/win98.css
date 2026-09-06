@@ -9,6 +9,14 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: "Windows Bold";
+  src: url("fonts/windows-bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
 :root {
   --w98-face: #c0c0c0;
   --w98-white: #ffffff;
@@ -94,6 +102,7 @@ a {
   padding: 2px 3px 2px 4px;
   background: var(--w98-navy);
   color: var(--w98-white);
+  font-family: "Windows Bold", "W95FA", "MS Sans Serif", Tahoma, sans-serif;
   font-size: 11px;
   user-select: none;
 }
@@ -475,7 +484,7 @@ a {
   display: grid;
   grid-template-columns: 255px 215px; /* 255 + 10 gap + 215 = 480 content */
   gap: 10px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .recorder-frame .w98-readout.big {
@@ -505,6 +514,9 @@ a {
 
 .recorder-frame .chart-panel {
   margin-bottom: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .recorder-frame .chart-panel-title {
@@ -512,5 +524,7 @@ a {
 }
 
 .recorder-frame .chart-stage.recorder-stage {
-  height: 170px;
+  height: auto;
+  flex: 1;
+  min-height: 170px;
 }

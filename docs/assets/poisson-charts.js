@@ -38,7 +38,7 @@
       left: narrow ? 40 : 56,
       right: narrow ? 8 : 12,
       top: narrow ? 8 : 12,
-      bottom: narrow ? 24 : 28
+      bottom: 28
     };
   }
 
@@ -75,7 +75,8 @@
   }
 
   function yToPx(area, y) {
-    return area.y + area.h - (y / Y_MAX) * area.h;
+    /* y=0 maps onto the axis pixel (area.y + area.h - 1), not one row below */
+    return area.y + (area.h - 1) * (1 - y / Y_MAX);
   }
 
   function drawGrid(ctx, area, style) {
@@ -84,7 +85,8 @@
     var bg = style === "a" ? "#c0c0c0" : "#ffffff";
     fillRect(ctx, area.x, area.y, area.w, area.h, bg);
 
-    for (var i = 0; i <= 10; i++) {
+    /* skip i=0 — solid x-axis is the zero line */
+    for (var i = 1; i <= 10; i++) {
       var yy = Math.round(yToPx(area, i / 10));
       if (dotted) {
         for (var x = area.x; x < area.x + area.w; x += 2) {
@@ -180,7 +182,7 @@
 
     /* rotate(-90deg), origin left top → place at mid-plot + half label length */
     add("ytitle", "Probability", 4, area.y + area.h / 2 + 34);
-    add("xtitle", "k", area.x + area.w / 2 - 4, h - 12);
+    add("xtitle", "k", area.x + area.w / 2 - 4, h - 10);
   }
 
   function drawChart(canvas, labelEl, style, lambda) {
