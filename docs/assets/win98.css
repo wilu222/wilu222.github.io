@@ -1,0 +1,484 @@
+/* Windows 98 chrome for Poisson viz pages. Blog theme (styles.css) is untouched. */
+
+@font-face {
+  font-family: "W95FA";
+  src: url("fonts/w95fa/w95f.woff2") format("woff2"),
+       url("fonts/w95fa/w95f.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  --w98-face: #c0c0c0;
+  --w98-white: #ffffff;
+  --w98-silver: #dfdfdf;
+  --w98-gray: #808080;
+  --w98-black: #000000;
+  --w98-navy: #000080;
+  --w98-teal: #008080;
+  --w98-desktop: #008080;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--w98-desktop);
+  color: var(--w98-black);
+  font-family: "W95FA", "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 11px;
+  line-height: 1.25;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  text-rendering: geometricPrecision;
+}
+
+a {
+  color: var(--w98-navy);
+}
+
+/* Outset / inset bevels (1px, no blur) */
+.bevel-out {
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--w98-white) var(--w98-black) var(--w98-black) var(--w98-white);
+  background: var(--w98-face);
+}
+
+.bevel-out-inner {
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--w98-silver) var(--w98-gray) var(--w98-gray) var(--w98-silver);
+}
+
+.bevel-in {
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--w98-gray) var(--w98-white) var(--w98-white) var(--w98-gray);
+  background: var(--w98-face);
+}
+
+.bevel-in-deep {
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--w98-black) var(--w98-white) var(--w98-white) var(--w98-black);
+  background: var(--w98-white);
+}
+
+/* Window chrome */
+.w98-window {
+  display: flex;
+  flex-direction: column;
+  background: var(--w98-face);
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--w98-white) var(--w98-black) var(--w98-black) var(--w98-white);
+  max-width: 1100px;
+  margin: 16px auto;
+}
+
+.w98-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 18px;
+  padding: 2px 3px 2px 4px;
+  background: var(--w98-navy);
+  color: var(--w98-white);
+  font-size: 11px;
+  user-select: none;
+}
+
+.w98-titlebar .title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.w98-title-btn {
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--w98-black);
+  background: var(--w98-face);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--w98-white) var(--w98-black) var(--w98-black) var(--w98-white);
+  cursor: default;
+  position: relative;
+}
+
+.w98-title-btn:active {
+  border-color: var(--w98-black) var(--w98-white) var(--w98-white) var(--w98-black);
+}
+
+/* Win98 caption close: 2px-thick pixel diagonals (not a font glyph) */
+.w98-close {
+  font-size: 0;
+  color: transparent;
+}
+
+.w98-close::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 3px;
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow:
+    0 0 #000, 1px 0 #000,
+    6px 0 #000, 7px 0 #000,
+    1px 1px #000, 2px 1px #000,
+    5px 1px #000, 6px 1px #000,
+    2px 2px #000, 3px 2px #000,
+    4px 2px #000, 5px 2px #000,
+    2px 3px #000, 3px 3px #000,
+    4px 3px #000, 5px 3px #000,
+    1px 4px #000, 2px 4px #000,
+    5px 4px #000, 6px 4px #000,
+    0 5px #000, 1px 5px #000,
+    6px 5px #000, 7px 5px #000;
+}
+
+.w98-close:active::before {
+  left: 5px;
+  top: 4px;
+}
+
+.w98-body {
+  padding: 8px;
+}
+
+.w98-menubar {
+  display: flex;
+  gap: 12px;
+  padding: 2px 6px 4px;
+  border-bottom: 1px solid var(--w98-white);
+  box-shadow: 0 1px 0 var(--w98-gray);
+  user-select: none;
+}
+
+.w98-menubar span {
+  display: inline-block;
+}
+
+.w98-menubar span u {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.w98-btn {
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--w98-black);
+  background: var(--w98-face);
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--w98-white) var(--w98-black) var(--w98-black) var(--w98-white);
+  padding: 4px 14px;
+  min-width: 75px;
+  cursor: default;
+  -webkit-font-smoothing: none;
+}
+
+.w98-btn:active,
+.w98-btn.is-pressed {
+  border-color: var(--w98-black) var(--w98-white) var(--w98-white) var(--w98-black);
+  padding: 5px 13px 3px 15px;
+}
+
+.w98-btn:focus {
+  outline: 1px dotted var(--w98-black);
+  outline-offset: -4px;
+}
+
+/* Fieldset / group box */
+.w98-group {
+  border: none;
+  margin: 0 0 10px;
+  padding: 10px 8px 8px;
+  position: relative;
+  background: transparent;
+}
+
+.w98-group::before {
+  content: "";
+  position: absolute;
+  inset: 6px 0 0;
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--w98-gray) var(--w98-white) var(--w98-white) var(--w98-gray);
+  pointer-events: none;
+}
+
+.w98-group > legend {
+  position: relative;
+  z-index: 1;
+  float: none;
+  width: auto;
+  padding: 0 4px;
+  margin-left: 6px;
+  background: var(--w98-face);
+  color: var(--w98-black);
+  font-size: 11px;
+}
+
+.w98-group > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Trackbar (range) */
+.w98-trackbar-wrap {
+  display: grid;
+  gap: 4px;
+  padding: 4px 2px 2px;
+}
+
+.w98-trackbar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.w98-trackbar {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  background: transparent;
+  margin: 0;
+  outline: none;
+  cursor: default;
+}
+
+.w98-trackbar:focus {
+  outline: none;
+}
+
+.w98-trackbar::-webkit-slider-runnable-track {
+  height: 4px;
+  background: var(--w98-face);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--w98-gray) var(--w98-white) var(--w98-white) var(--w98-gray);
+  box-shadow: inset 1px 1px 0 var(--w98-black);
+}
+
+.w98-trackbar::-moz-range-track {
+  height: 4px;
+  background: var(--w98-face);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--w98-gray) var(--w98-white) var(--w98-white) var(--w98-gray);
+  box-shadow: inset 1px 1px 0 var(--w98-black);
+}
+
+.w98-trackbar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 21px;
+  margin-top: -9px;
+  background: var(--w98-face);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--w98-white) var(--w98-black) var(--w98-black) var(--w98-white);
+  box-shadow: inset -1px -1px 0 var(--w98-gray);
+  border-radius: 0;
+}
+
+.w98-trackbar::-moz-range-thumb {
+  width: 11px;
+  height: 21px;
+  background: var(--w98-face);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--w98-white) var(--w98-black) var(--w98-black) var(--w98-white);
+  box-shadow: inset -1px -1px 0 var(--w98-gray);
+  border-radius: 0;
+}
+
+.w98-ticks {
+  display: flex;
+  justify-content: space-between;
+  height: 4px;
+  padding: 0 4px;
+  pointer-events: none;
+}
+
+.w98-ticks span {
+  width: 1px;
+  height: 4px;
+  background: var(--w98-black);
+  display: block;
+}
+
+/* Readout */
+.w98-readout {
+  font-size: 16px;
+  line-height: 1.4;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  background: var(--w98-white);
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--w98-gray) var(--w98-white) var(--w98-white) var(--w98-gray);
+  box-shadow: inset 1px 1px 0 var(--w98-black);
+  -webkit-font-smoothing: none;
+}
+
+.w98-readout.big {
+  font-size: 22px;
+  line-height: 1.45;
+  padding: 12px 14px;
+}
+
+.w98-readout .line {
+  display: block;
+}
+
+/* Chart panel */
+.chart-panel {
+  position: relative;
+  background: var(--w98-face);
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--w98-gray) var(--w98-white) var(--w98-white) var(--w98-gray);
+  margin-bottom: 10px;
+}
+
+.chart-panel-title {
+  padding: 4px 6px 2px;
+  color: var(--w98-navy);
+  font-size: 11px;
+  border-bottom: 1px solid var(--w98-silver);
+  -webkit-font-smoothing: none;
+}
+
+.chart-stage {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: var(--w98-face);
+}
+
+.chart-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.chart-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-font-smoothing: none;
+  font-family: "W95FA", "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 10px;
+  color: var(--w98-navy);
+}
+
+.chart-labels.dark {
+  color: var(--w98-black);
+}
+
+.chart-labels .ylab,
+.chart-labels .xlab,
+.chart-labels .ytitle,
+.chart-labels .xtitle {
+  position: absolute;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.chart-labels .ytitle {
+  transform: rotate(-90deg);
+  transform-origin: left top;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.w98-footer {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--w98-black);
+}
+
+.w98-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.page-pad {
+  padding: 12px;
+  min-height: 100vh;
+}
+
+/* Chrome/macOS Retina: design at 1x, zoom 2 so glyphs land on even device pixels */
+.w98-scale {
+  zoom: 2;
+  width: 50%;
+}
+
+.recorder-frame .w98-scale {
+  width: 400px; /* visual ~800px after zoom — fixed so toolbar never wraps at 100% */
+}
+
+.recorder-frame .w98-window {
+  max-width: none;
+  width: 100%;
+}
+
+.recorder-frame .w98-toolbar {
+  flex-wrap: nowrap;
+}
+
+.recorder-frame .w98-toolbar .w98-btn {
+  min-width: 32px;
+}
+
+.recorder-frame .w98-toolbar #play {
+  min-width: 56px;
+}
+
+.recorder-frame .chart-panel-title {
+  display: none;
+}
+
+.recorder-frame .chart-stage.recorder-stage {
+  height: 160px;
+}

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Poisson draw — CDF and inverse CDF</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --ink: #1c1b18;
+      --muted: #5c5850;
+      --card: #fffdf8;
+      --line: #d9d4c8;
+      --k0: #4a6fa5;
+      --k1: #c47b3a;
+      --k2: #6a8f5a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.45 Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 64px; }
+    h1 { font-size: 1.55rem; font-weight: 600; margin: 0 0 8px; }
+    h2 { font-size: 1.15rem; font-weight: 600; margin: 28px 0 8px; }
+    p, li { color: var(--ink); }
+    .lede, .muted { color: var(--muted); }
+    .lede { margin: 0 0 20px; }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 14px 0;
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 800px) { .row { grid-template-columns: 1fr; } }
+    .controls { display: grid; gap: 12px; }
+    label { display: block; font-size: 0.92rem; }
+    input[type="range"] { width: 100%; }
+    .val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .readout {
+      font-size: 1.05rem;
+      margin: 8px 0 0;
+    }
+    .btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    button {
+      font: inherit;
+      font-size: 0.9rem;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { border-color: #888; }
+    .plot { height: 340px; }
+    .plot-wide { height: 200px; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>How the skill picks a count: CDF and inverse CDF</h1>
+  <p class="lede">Interactive explainer for <a href="https://github.com/wilu222/unpolish-ai-writing">unpolish-ai-writing</a>. Not part of the skill install. Needs the Plotly CDN.</p>
+
+  <div class="card">
+    <p><strong>CDF</strong> (cumulative distribution function) = running total of the bar heights. <span class="mono">F(m) = P(count ≤ m)</span>. At 0 it is just the first bar. At 1 it is bar 0 + bar 1. By the last bar it is 1.</p>
+    <p><strong>Inverse CDF</strong> (also called the quantile function, or inverse-transform sampling) = read that running total <em>backwards</em>. You start with a number <span class="mono">u</span> between 0 and 1, then take the <em>smallest</em> <span class="mono">m</span> whose running total is at least <span class="mono">u</span>. That <span class="mono">m</span> is <span class="mono">k</span>.</p>
+    <p class="muted" style="margin-bottom:0">The recipe’s line <span class="mono">k = smallest m with cdf_poisson(m; λ) ≥ u</span> is exactly the inverse CDF. The hash only supplies <span class="mono">u</span>. λ only shapes the bars (and therefore the stairs).</p>
+  </div>
+
+  <div class="card controls">
+    <label>λ — expected count (from word length). Skill: <span class="mono">max(0.05, words / 600)</span>
+      <div><input id="lambda" type="range" min="0.05" max="2.5" step="0.01" value="1"> <span class="val" id="lambdaOut"></span></div>
+    </label>
+    <label>u — dart from the hash (Uniform 0–1)
+      <div><input id="u" type="range" min="0.001" max="0.999" step="0.001" value="0.225"> <span class="val" id="uOut"></span></div>
+    </label>
+    <p class="readout" id="readout"></p>
+    <div class="btns">
+      <button type="button" data-preset="f1-lo">Fixture 1 · u≈0.225 · λ=1 → k=0</button>
+      <button type="button" data-preset="f1-hi">Fixture 1 · same u · λ=1.67 → k=1</button>
+      <button type="button" data-preset="f2-lo">Fixture 2 · u≈0.646 · λ=1 → k=1</button>
+      <button type="button" data-preset="f2-hi">Fixture 2 · same u · λ=1.67 → k=2</button>
+      <button type="button" data-preset="short">~60 words · λ=0.10 · u=0.22 → k=0</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <h2>1. Poisson bars (PMF)</h2>
+      <p class="muted">How often each count would show up over many rerolls. λ shapes the bars. One draw does not live on this y-axis.</p>
+      <div id="pmf" class="plot"></div>
+    </div>
+    <div>
+      <h2>2. CDF stairs (running total)</h2>
+      <p class="muted">Each step rises by that bar’s height. The dashed line is u. Walk right until the stair is above the line; drop down — that is k.</p>
+      <div id="cdf" class="plot"></div>
+    </div>
+  </div>
+
+  <h2>3. Inverse CDF (the recipe)</h2>
+  <p class="muted">Same stairs, axes swapped: start at u on the bottom, go up to the stair, read k on the left. That is the inverse CDF (quantile of u).</p>
+  <div id="inv" class="plot"></div>
+
+  <h2>4. Bars tipped over (the dart ruler)</h2>
+  <p class="muted">The bar heights laid end to end so they add to 1. Same inverse CDF: u falls in a segment, that segment’s label is k.</p>
+  <div id="ruler" class="plot-wide"></div>
+
+  <h2>Why both charts</h2>
+  <table>
+    <thead>
+      <tr><th></th><th>Bars (PMF)</th><th>Stairs / ruler (CDF)</th><th>Inverse CDF</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Question</td>
+        <td>How often is each count?</td>
+        <td>How much probability have we used up by count m?</td>
+        <td>Given one dart u, which count?</td>
+      </tr>
+      <tr>
+        <td>Input</td>
+        <td>λ only</td>
+        <td>λ only</td>
+        <td>λ and u</td>
+      </tr>
+      <tr>
+        <td>Output</td>
+        <td>A height per k</td>
+        <td>A height F(m) that only goes up</td>
+        <td>One integer k</td>
+      </tr>
+      <tr>
+        <td>In the skill</td>
+        <td>Why short drafts are usually 0</td>
+        <td>The table the recipe walks</td>
+        <td>The actual draw</td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+<script>
+(function () {
+  const MAX_K = 10;
+  const colors = ["#4a6fa5", "#c47b3a", "#6a8f5a", "#8b5a7a", "#5a8f8b", "#a35a4a", "#6b6b8a", "#7a6a4a", "#4a7a6a", "#7a4a6a", "#555"];
+
+  function logFact(n) {
+    let s = 0;
+    for (let i = 2; i <= n; i++) s += Math.log(i);
+    return s;
+  }
+
+  function pmf(k, lambda) {
+    if (lambda <= 0) return k === 0 ? 1 : 0;
+    return Math.exp(-lambda + k * Math.log(lambda) - logFact(k));
+  }
+
+  function dist(lambda) {
+    const p = [];
+    const F = [];
+    let run = 0;
+    for (let k = 0; k <= MAX_K; k++) {
+      const pk = pmf(k, lambda);
+      p.push(pk);
+      run += pk;
+      F.push(Math.min(run, 1));
+    }
+    return { p, F };
+  }
+
+  function inverseCdf(F, u) {
+    for (let m = 0; m < F.length; m++) {
+      if (F[m] >= u) return m;
+    }
+    return F.length - 1;
+  }
+
+  const elL = document.getElementById("lambda");
+  const elU = document.getElementById("u");
+  const outL = document.getElementById("lambdaOut");
+  const outU = document.getElementById("uOut");
+  const readout = document.getElementById("readout");
+
+  const layoutBase = {
+    paper_bgcolor: "#fffdf8",
+    plot_bgcolor: "#fffdf8",
+    font: { family: "Georgia, serif", size: 13, color: "#1c1b18" },
+    margin: { t: 28, r: 24, b: 48, l: 52 },
+    hovermode: "closest"
+  };
+
+  function draw() {
+    const lambda = Number(elL.value);
+    const u = Number(elU.value);
+    const { p, F } = dist(lambda);
+    const k = inverseCdf(F, u);
+    const ks = p.map((_, i) => i);
+
+    outL.textContent = "λ = " + lambda.toFixed(2);
+    outU.textContent = "u = " + u.toFixed(3);
+    readout.innerHTML = "Inverse CDF: smallest m with F(m) ≥ u  →  <strong>k = " + k + "</strong>"
+      + " &nbsp;·&nbsp; F(" + k + ") = " + F[k].toFixed(3)
+      + (k > 0 ? " &nbsp;·&nbsp; F(" + (k - 1) + ") = " + F[k - 1].toFixed(3) + " (still below u)" : " &nbsp;·&nbsp; first step already clears u");
+
+    const barColors = ks.map((i) => (i === k ? colors[i] : "rgba(28,27,24,0.18)"));
+
+    Plotly.react("pmf", [{
+      type: "bar",
+      x: ks,
+      y: p,
+      marker: { color: barColors },
+      hovertemplate: "k = %{x}<br>P(k) = %{y:.3f}<extra></extra>"
+    }], Object.assign({}, layoutBase, {
+      title: { text: "P(count = k)", font: { size: 14 } },
+      xaxis: { title: "k  (count)", dtick: 1, range: [-0.6, 8.6] },
+      yaxis: { title: "probability", rangemode: "tozero", range: [0, Math.max(0.45, p[0] + 0.08)] },
+      annotations: [{
+        x: k, y: p[k], text: "this draw", showarrow: true, arrowhead: 2, ay: -28
+      }]
+    }), { displayModeBar: false, responsive: true });
+
+    const stepX = [-0.5];
+    const stepY = [0];
+    for (let i = 0; i < ks.length; i++) {
+      stepX.push(i, i + 0.999);
+      stepY.push(F[i], F[i]);
+    }
+
+    Plotly.react("cdf", [
+      {
+        type: "scatter",
+        mode: "lines",
+        x: stepX,
+        y: stepY,
+        line: { color: "#1c1b18", width: 2, shape: "hv" },
+        hovertemplate: "F(%{x:.0f}) ≈ %{y:.3f}<extra></extra>",
+        name: "CDF"
+      },
+      {
+        type: "scatter",
+        mode: "lines",
+        x: [-0.5, 8.6],
+        y: [u, u],
+        line: { color: "#c47b3a", width: 1.5, dash: "dash" },
+        name: "u",
+        hovertemplate: "u = %{y:.3f}<extra></extra>"
+      },
+      {
+        type: "scatter",
+        mode: "lines+markers",
+        x: [-0.5, k, k],
+        y: [u, u, 0],
+        line: { color: "#c47b3a", width: 1 },
+        marker: { size: 8, color: "#c47b3a" },
+        name: "read k",
+        hoverinfo: "skip"
+      }
+    ], Object.assign({}, layoutBase, {
+      title: { text: "F(m) = P(count ≤ m)", font: { size: 14 } },
+      xaxis: { title: "m", dtick: 1, range: [-0.6, 8.6] },
+      yaxis: { title: "running total", range: [-0.02, 1.05] },
+      showlegend: false,
+      annotations: [
+        { x: 8.2, y: u, text: "u", showarrow: false, xanchor: "left", font: { color: "#c47b3a" } },
+        { x: k, y: -0.02, text: "k", showarrow: false, yanchor: "top", font: { color: "#c47b3a" } }
+      ]
+    }), { displayModeBar: false, responsive: true });
+
+    const invX = [0];
+    const invY = [-0.5];
+    for (let i = 0; i < ks.length; i++) {
+      const lo = i === 0 ? 0 : F[i - 1];
+      invX.push(lo, F[i]);
+      invY.push(i, i);
+    }
+
+    Plotly.react("inv", [
+      {
+        type: "scatter",
+        mode: "lines",
+        x: invX,
+        y: invY,
+        line: { color: "#1c1b18", width: 2 },
+        name: "inverse CDF",
+        hovertemplate: "u = %{x:.3f} → k = %{y}<extra></extra>"
+      },
+      {
+        type: "scatter",
+        mode: "lines+markers",
+        x: [0, u, u],
+        y: [k, k, -0.5],
+        line: { color: "#c47b3a", width: 1.5 },
+        marker: { size: 8, color: "#c47b3a" },
+        hoverinfo: "skip"
+      }
+    ], Object.assign({}, layoutBase, {
+      title: { text: "k = F⁻¹(u)", font: { size: 14 } },
+      xaxis: { title: "u  (dart)", range: [-0.02, 1.02] },
+      yaxis: { title: "k", dtick: 1, range: [-0.6, 8.6] },
+      showlegend: false,
+      annotations: [
+        { x: u, y: -0.5, text: "u", showarrow: false, yanchor: "top", font: { color: "#c47b3a" } },
+        { x: 0, y: k, text: "k = " + k, showarrow: false, xanchor: "right", font: { color: "#c47b3a" } }
+      ]
+    }), { displayModeBar: false, responsive: true });
+
+    const rulerTraces = ks.map((i) => ({
+      type: "bar",
+      orientation: "h",
+      y: [" "],
+      x: [p[i]],
+      name: "k=" + i,
+      marker: { color: i === k ? colors[i] : "rgba(28,27,24,0.16)" },
+      hovertemplate: "k = " + i + "<br>width = P(k) = %{x:.3f}<extra></extra>"
+    }));
+
+    Plotly.react("ruler", rulerTraces, Object.assign({}, layoutBase, {
+      barmode: "stack",
+      margin: { t: 16, r: 24, b: 40, l: 16 },
+      xaxis: { title: "u  (0 → 1)", range: [0, 1], dtick: 0.1 },
+      yaxis: { showticklabels: false },
+      showlegend: false,
+      annotations: [
+        { x: u, y: 0, text: "▲ u", showarrow: false, yshift: 28, font: { color: "#c47b3a" } },
+        ...ks.filter((i) => p[i] > 0.04).map((i) => {
+          const start = i === 0 ? 0 : F[i - 1];
+          return {
+            x: start + p[i] / 2,
+            y: 0,
+            text: "k=" + i,
+            showarrow: false,
+            font: { size: 12, color: i === k ? "#fff" : "#5c5850" }
+          };
+        })
+      ],
+      shapes: [{
+        type: "line",
+        x0: u, x1: u, y0: -0.5, y1: 0.5,
+        line: { color: "#c47b3a", width: 2 }
+      }]
+    }), { displayModeBar: false, responsive: true });
+  }
+
+  const presets = {
+    "f1-lo": { lambda: 1, u: 0.225 },
+    "f1-hi": { lambda: 1.67, u: 0.225 },
+    "f2-lo": { lambda: 1, u: 0.646 },
+    "f2-hi": { lambda: 1.67, u: 0.646 },
+    short: { lambda: 0.1, u: 0.22 }
+  };
+
+  document.querySelectorAll("[data-preset]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const p = presets[btn.getAttribute("data-preset")];
+      elL.value = p.lambda;
+      elU.value = p.u;
+      draw();
+    });
+  });
+
+  elL.addEventListener("input", draw);
+  elU.addEventListener("input", draw);
+  draw();
+})();
+</script>
+</body>
+</html>

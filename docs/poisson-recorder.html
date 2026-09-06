@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>unpolish-ai-writing — wilu222</title>
+  <link rel="stylesheet" href="assets/win98.css">
+</head>
+<body class="recorder-frame">
+  <div class="page-pad">
+    <div class="w98-scale">
+    <div class="w98-window" role="application" aria-label="unpolish-ai-writing Poisson">
+      <div class="w98-titlebar">
+        <span class="title" id="winTitle">unpolish-ai-writing — wilu222</span>
+        <button type="button" class="w98-title-btn w98-close" aria-label="Close" tabindex="-1"></button>
+      </div>
+      <div class="w98-body">
+        <div class="w98-readout big" id="readout" aria-live="polite">
+          <span class="line">Word count: <strong id="wordsOut">600</strong></span>
+          <span class="line">Expected errors (λ): <strong id="lambdaOut">1.00</strong></span>
+        </div>
+
+        <fieldset class="w98-group">
+          <legend>Word count</legend>
+          <div class="w98-trackbar-wrap">
+            <div class="w98-trackbar-labels">
+              <span>0</span>
+              <span>2000</span>
+            </div>
+            <input
+              class="w98-trackbar"
+              id="words"
+              type="range"
+              min="0"
+              max="2000"
+              step="25"
+              value="600"
+              aria-label="Word count"
+            >
+            <div class="w98-ticks" id="ticks" aria-hidden="true"></div>
+          </div>
+          <div class="w98-toolbar">
+            <button type="button" class="w98-btn" id="play">Play</button>
+            <button type="button" class="w98-btn" id="styleA">A</button>
+            <button type="button" class="w98-btn" id="styleB">B</button>
+            <button type="button" class="w98-btn" id="styleC">C</button>
+          </div>
+        </fieldset>
+
+        <div class="chart-panel">
+          <div class="chart-stage recorder-stage">
+            <canvas id="chart" width="640" height="160"></canvas>
+            <div class="chart-labels" id="labels"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <script src="assets/poisson-charts.js"></script>
+  <script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var style = (params.get("style") || "a").toLowerCase();
+  if (style !== "a" && style !== "b" && style !== "c") style = "a";
+
+  var wordsEl = document.getElementById("words");
+  var wordsOut = document.getElementById("wordsOut");
+  var lambdaOut = document.getElementById("lambdaOut");
+  var playBtn = document.getElementById("play");
+  var ticking = false;
+  var raf = 0;
+  var dir = 1;
+
+  Poisson98.makeTicks(document.getElementById("ticks"), 9);
+
+  function setStyle(s) {
+    style = s;
+    document.getElementById("styleA").classList.toggle("is-pressed", style === "a");
+    document.getElementById("styleB").classList.toggle("is-pressed", style === "b");
+    document.getElementById("styleC").classList.toggle("is-pressed", style === "c");
+    if (history.replaceState) {
+      history.replaceState(null, "", "?style=" + style);
+    }
+    redraw();
+  }
+
+  function redraw() {
+    var words = Number(wordsEl.value);
+    var lambda = Poisson98.lambdaFromWords(words);
+    wordsOut.textContent = String(words);
+    lambdaOut.textContent = Poisson98.formatLambda(lambda);
+    Poisson98.drawChart(document.getElementById("chart"), document.getElementById("labels"), style, lambda);
+  }
+
+  function stopPlay() {
+    ticking = false;
+    playBtn.textContent = "Play";
+    playBtn.classList.remove("is-pressed");
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+  }
+
+  function tick() {
+    if (!ticking) return;
+    var v = Number(wordsEl.value);
+    v += dir * 25;
+    if (v >= 2000) { v = 2000; dir = -1; }
+    if (v <= 0) { v = 0; dir = 1; }
+    wordsEl.value = String(v);
+    redraw();
+    raf = requestAnimationFrame(function () {
+      setTimeout(tick, 40);
+    });
+  }
+
+  wordsEl.addEventListener("input", function () {
+    stopPlay();
+    redraw();
+  });
+
+  playBtn.addEventListener("click", function () {
+    if (ticking) {
+      stopPlay();
+      return;
+    }
+    ticking = true;
+    playBtn.textContent = "Stop";
+    playBtn.classList.add("is-pressed");
+    dir = 1;
+    if (Number(wordsEl.value) <= 0) wordsEl.value = "0";
+    tick();
+  });
+
+  document.getElementById("styleA").addEventListener("click", function () { stopPlay(); setStyle("a"); });
+  document.getElementById("styleB").addEventListener("click", function () { stopPlay(); setStyle("b"); });
+  document.getElementById("styleC").addEventListener("click", function () { stopPlay(); setStyle("c"); });
+
+  window.addEventListener("resize", redraw);
+  setStyle(style);
+  document.fonts.ready.then(redraw);
+})();
+  </script>
+</body>
+</html>
