@@ -138,11 +138,12 @@ a {
 .w98-close::before {
   content: "";
   position: absolute;
-  left: 4px;
-  top: 3px;
+  left: 3px;
+  top: 2px;
   width: 1px;
   height: 1px;
   background: transparent;
+  /* 8x7 Win98 close X — 2px-thick diagonals, 2px waist at y3 */
   box-shadow:
     0 0 #000, 1px 0 #000,
     6px 0 #000, 7px 0 #000,
@@ -150,17 +151,18 @@ a {
     5px 1px #000, 6px 1px #000,
     2px 2px #000, 3px 2px #000,
     4px 2px #000, 5px 2px #000,
-    2px 3px #000, 3px 3px #000,
-    4px 3px #000, 5px 3px #000,
-    1px 4px #000, 2px 4px #000,
-    5px 4px #000, 6px 4px #000,
-    0 5px #000, 1px 5px #000,
-    6px 5px #000, 7px 5px #000;
+    3px 3px #000, 4px 3px #000,
+    2px 4px #000, 3px 4px #000,
+    4px 4px #000, 5px 4px #000,
+    1px 5px #000, 2px 5px #000,
+    5px 5px #000, 6px 5px #000,
+    0 6px #000, 1px 6px #000,
+    6px 6px #000, 7px 6px #000;
 }
 
 .w98-close:active::before {
-  left: 5px;
-  top: 4px;
+  left: 4px;
+  top: 3px;
 }
 
 .w98-body {
@@ -454,8 +456,14 @@ a {
   width: 50%;
 }
 
+.recorder-frame .page-pad {
+  padding: 8px;
+  min-height: 0;
+}
+
 .recorder-frame .w98-scale {
-  width: 400px; /* visual ~800px after zoom — fixed so toolbar never wraps at 100% */
+  zoom: 2;
+  width: 500px; /* ~1000px visual */
 }
 
 .recorder-frame .w98-window {
@@ -463,8 +471,28 @@ a {
   width: 100%;
 }
 
+.recorder-frame .w98-body {
+  display: grid;
+  grid-template-columns: 255px 215px; /* 255 + 10 gap + 215 = 480 content */
+  gap: 10px;
+  align-items: start;
+}
+
+.recorder-frame .w98-readout.big {
+  font-size: 17px; /* 34px visual — still large for a GIF */
+  line-height: 1.4;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.recorder-frame .w98-group {
+  margin-bottom: 0;
+  padding: 8px 8px 6px;
+}
+
 .recorder-frame .w98-toolbar {
   flex-wrap: nowrap;
+  margin: 6px 0 0;
 }
 
 .recorder-frame .w98-toolbar .w98-btn {
@@ -475,10 +503,14 @@ a {
   min-width: 56px;
 }
 
+.recorder-frame .chart-panel {
+  margin-bottom: 0;
+}
+
 .recorder-frame .chart-panel-title {
   display: none;
 }
 
 .recorder-frame .chart-stage.recorder-stage {
-  height: 160px;
+  height: 170px;
 }

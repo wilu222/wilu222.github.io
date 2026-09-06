@@ -32,7 +32,14 @@
   }
 
   function pad(canvas) {
-    return { left: 56, right: 12, top: 12, bottom: 28 };
+    var w = canvas.clientWidth || 0;
+    var narrow = w < 320;
+    return {
+      left: narrow ? 40 : 56,
+      right: narrow ? 8 : 12,
+      top: narrow ? 8 : 12,
+      bottom: narrow ? 24 : 28
+    };
   }
 
   function setupCanvas(canvas) {

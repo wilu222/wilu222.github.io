@@ -15,37 +15,39 @@
         <button type="button" class="w98-title-btn w98-close" aria-label="Close" tabindex="-1"></button>
       </div>
       <div class="w98-body">
-        <div class="w98-readout big" id="readout" aria-live="polite">
-          <span class="line">Word count: <strong id="wordsOut">600</strong></span>
-          <span class="line">Expected errors (λ): <strong id="lambdaOut">1.00</strong></span>
-        </div>
+        <div class="rec-left">
+          <div class="w98-readout big" id="readout" aria-live="polite">
+            <span class="line">Word count: <strong id="wordsOut">600</strong></span>
+            <span class="line">Expected errors (λ): <strong id="lambdaOut">1.00</strong></span>
+          </div>
 
-        <fieldset class="w98-group">
-          <legend>Word count</legend>
-          <div class="w98-trackbar-wrap">
-            <div class="w98-trackbar-labels">
-              <span>0</span>
-              <span>2000</span>
+          <fieldset class="w98-group">
+            <legend>Word count</legend>
+            <div class="w98-trackbar-wrap">
+              <div class="w98-trackbar-labels">
+                <span>0</span>
+                <span>2000</span>
+              </div>
+              <input
+                class="w98-trackbar"
+                id="words"
+                type="range"
+                min="0"
+                max="2000"
+                step="25"
+                value="600"
+                aria-label="Word count"
+              >
+              <div class="w98-ticks" id="ticks" aria-hidden="true"></div>
             </div>
-            <input
-              class="w98-trackbar"
-              id="words"
-              type="range"
-              min="0"
-              max="2000"
-              step="25"
-              value="600"
-              aria-label="Word count"
-            >
-            <div class="w98-ticks" id="ticks" aria-hidden="true"></div>
-          </div>
-          <div class="w98-toolbar">
-            <button type="button" class="w98-btn" id="play">Play</button>
-            <button type="button" class="w98-btn" id="styleA">A</button>
-            <button type="button" class="w98-btn" id="styleB">B</button>
-            <button type="button" class="w98-btn" id="styleC">C</button>
-          </div>
-        </fieldset>
+            <div class="w98-toolbar">
+              <button type="button" class="w98-btn" id="play">Play</button>
+              <button type="button" class="w98-btn" id="styleA">A</button>
+              <button type="button" class="w98-btn" id="styleB">B</button>
+              <button type="button" class="w98-btn" id="styleC">C</button>
+            </div>
+          </fieldset>
+        </div>
 
         <div class="chart-panel">
           <div class="chart-stage recorder-stage">
