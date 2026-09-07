@@ -132,6 +132,7 @@ a {
   border-color: var(--w98-white) var(--w98-black) var(--w98-black) var(--w98-white);
   cursor: default;
   position: relative;
+  overflow: visible;
 }
 
 .w98-title-btn:active {
@@ -151,10 +152,10 @@ a {
   top: 2px;
   width: 1px;
   height: 1px;
-  background: transparent;
-  /* 8x7 Win98 close X — 2px-thick diagonals, 2px waist at y3 */
+  /* element itself is the (0,0) top-left tip — 0 0 box-shadow won't paint on transparent */
+  background: #000;
   box-shadow:
-    0 0 #000, 1px 0 #000,
+    1px 0 #000,
     6px 0 #000, 7px 0 #000,
     1px 1px #000, 2px 1px #000,
     5px 1px #000, 6px 1px #000,
