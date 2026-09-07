@@ -182,7 +182,8 @@
 
     /* rotate(-90deg), origin left top → place at mid-plot + half label length */
     add("ytitle", "Probability", 4, area.y + area.h / 2 + 34);
-    add("xtitle", "k", area.x + area.w / 2 - 4, h - 10);
+    /* ~11 glyphs at 10px ≈ 66px wide; center under plot */
+    add("xtitle", "# of Errors", area.x + area.w / 2 - 33, h - 10);
   }
 
   function drawChart(canvas, labelEl, style, lambda) {
