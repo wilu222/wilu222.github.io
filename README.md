@@ -25,7 +25,3 @@ http://localhost:8000
 - `docs/styles.css` - shared neobrutalist editorial styling
 - `docs/assets/article-header.svg` - placeholder article image
 
-`misc/` holds private notes/drafts and is gitignored — it stays local only.
-
-See [publishing.md](publishing.md) for GitHub Pages setup and later tooling options.
-
