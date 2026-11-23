@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Middle Click Test</title>
+</head>
+<body style="font:20px sans-serif;padding:2em;height:90vh"><p>Click or drag here. Last: <b id=o>-</b></p><p>Middle-drag moves: <b id=d>0</b></p>
+<script>
+let down = -1, moves = 0
+addEventListener('mousedown', e => { down = e.button; moves = 0; o.textContent = 'down button ' + e.button; e.preventDefault() })
+addEventListener('mousemove', e => { if (down === 1 && (e.buttons & 4)) d.textContent = ++moves })
+addEventListener('mouseup', e => { o.textContent += ', up button ' + e.button; down = -1 })
+addEventListener('contextmenu', e => e.preventDefault())
+</script></body>
+</html>
